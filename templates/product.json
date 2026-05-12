@@ -7,27 +7,25 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
- {
-    "sections": {
-      "heading": {
-        "type": "headings",
-        "settings": {
-          "text": "Hello world"
-        }
-      },
-      "featured_collection_B9BdaN": {
-        "type": "featured-collection",
-        "name": "Featured Collection",
-        "settings": {
-          "heading": "Featured Collection",
-          "collection": "frontpage",
-          "products_to_show": 4
-        }
+{
+  "sections": {
+    "featured_collection_B9BdaN": {
+      "type": "featured-collection",
+      "name": "Featured Collection",
+      "settings": {
+        "heading": "Featured Collection",
+        "collection": "frontpage",
+        "products_to_show": 4
       }
     },
-    "order": [
-      "heading",
-      "featured_collection_B9BdaN"
-    ]
-  }
-  
+    "product_info_mP4jUy": {
+      "type": "product-info",
+      "name": "Custom Product Page",
+      "settings": {}
+    }
+  },
+  "order": [
+    "product_info_mP4jUy",
+    "featured_collection_B9BdaN"
+  ]
+}
