@@ -1,9 +1,11 @@
 {
-    "sections": {
-     
-     
- },
-    "order": [
-     
-    ] 
- }
+  "sections": {
+    "heading": {
+      "type": "headings",
+      "settings": {
+        "text": "Hello world"
+      }
+    }
+  },
+  "order": ["heading"]
+}
