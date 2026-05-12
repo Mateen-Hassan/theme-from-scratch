@@ -1,0 +1,226 @@
+{% comment %} 
+      Simple Product Page Section
+{% endcomment %}
+
+<section class="custom-product-page">
+  <div class="page-width">
+
+    <div class="product-layout">
+
+      <!-- Product Images -->
+      <div class="product-images">
+        {% if product.featured_image %}
+          <img
+            id="main-product-image"
+            src="{{ product.featured_image | image_url: width: 900 }}"
+            alt="{{ product.title }}"
+            width="900"
+            height="900">
+        {% endif %}
+
+        <div class="product-thumbnails">
+          {% for image in product.images %}
+            <img
+              class="thumbnail"
+              src="{{ image | image_url: width: 150 }}"
+              data-full-image="{{ image | image_url: width: 900 }}"
+              alt="{{ product.title }}"
+              width="150"
+              height="150">
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Product Info -->
+      <div class="product-info">
+
+        <h1>{{ product.title }}</h1>
+
+        <p class="product-price">
+          {{ product.price | money }}
+        </p>
+
+        <div class="product-description">
+          {{ product.description }}
+        </div>
+
+        {% form 'product'
+          , product %}
+
+          <!-- Variant Picker -->
+          {% unless product.has_only_default_variant %}
+            <div class="variant-wrapper">
+
+              {% for option in product.options_with_values %}
+                <div class="variant-option">
+
+                  <label>{{ option.name }}</label>
+
+                  <select name="options[{{ option.name }}]">
+                    {% for value in option.values %}
+                      <option value="{{ value }}">
+                        {{ value }}
+                      </option>
+                    {% endfor %}
+                  </select>
+
+                </div>
+              {% endfor %}
+
+            </div>
+          {% endunless %}
+
+          <!-- Quantity -->
+          <div class="quantity-wrapper">
+            <label>Quantity</label>
+
+            <input
+              type="number"
+              name="quantity"
+              value="1"
+              min="1">
+          </div>
+
+          <!-- Variant ID -->
+          <input
+            type="hidden"
+            name="id"
+            value="{{ product.selected_or_first_available_variant.id }}">
+
+          <!-- Add to Cart -->
+          <button type="submit" class="add-to-cart-btn">
+            Add to Cart
+          </button>
+
+        {% endform %}
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .custom-product-page {
+    padding: 60px 20px;
+  }
+
+  .product-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: start;
+  }
+
+  .product-images img {
+    width: 100%;
+    display: block;
+    border-radius: 10px;
+  }
+
+  .product-thumbnails {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .product-thumbnails img {
+    width: 80px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+  }
+
+  .product-info h1 {
+    font-size: 36px;
+    margin-bottom: 15px;
+  }
+
+  .product-price {
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+
+  .product-description {
+    margin-bottom: 30px;
+  }
+
+  .variant-wrapper {
+    margin-bottom: 20px;
+  }
+
+  .variant-option {
+    margin-bottom: 15px;
+  }
+
+  .variant-option label,
+  .quantity-wrapper label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .variant-option select,
+  .quantity-wrapper input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+  }
+
+  .add-to-cart-btn {
+    width: 100%;
+    padding: 15px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  @media screen and (max-width: 768px) {
+    .product-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .product-info h1 {
+      font-size: 28px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+  
+  const thumbnails = document.querySelectorAll(".thumbnail");
+  const mainImage = document.getElementById("main-product-image");
+  
+  thumbnails.forEach((thumbnail) => {
+  
+    thumbnail.addEventListener("click", function () {
+  
+      const newImage = this.getAttribute("data-full-image");
+  
+      mainImage.src = newImage;
+  
+    });
+  
+  });
+  
+  });
+</script>
+
+{% schema %}
+  {
+    "name": "Custom Product Page",
+    "settings": [],
+    "presets": [
+      {
+        "name": "Custom Product Page"
+      }
+    ]
+  }
+{% endschema %}
