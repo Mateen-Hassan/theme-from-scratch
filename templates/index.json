@@ -9,6 +9,15 @@
  */
 {
   "sections": {
+    "header_Wa7RAN": {
+      "type": "header",
+      "disabled": true,
+      "name": "Simple Header",
+      "settings": {
+        "sticky_header": true,
+        "header_bg": "#ffffff"
+      }
+    },
     "heading": {
       "type": "headings",
       "settings": {
@@ -22,14 +31,6 @@
         "heading": "Featured Collection",
         "collection": "frontpage",
         "products_to_show": 4
-      }
-    },
-    "header_Wa7RAN": {
-      "type": "header",
-      "name": "Simple Header",
-      "settings": {
-        "sticky_header": true,
-        "header_bg": "#ffffff"
       }
     }
   },
