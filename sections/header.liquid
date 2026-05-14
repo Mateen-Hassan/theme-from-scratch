@@ -1,0 +1,654 @@
+{% comment %} 
+  Simple Shopify Header with Cart Drawer Trigger 
+  Compatible with Shopify Online Store 2.0 
+  Place this in sections/header.liquid or snippets/header.liquid
+{% endcomment %}
+
+<header class="site-header" data-site-header>
+  <div class="header-container">
+    <!-- Mobile Menu Toggle (optional) -->
+    <button
+      class="mobile-menu-toggle"
+      data-mobile-menu-toggle
+      aria-label="Menu">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Logo -->
+    <div class="header-logo">
+      <a href="/" class="logo-link">
+        {% if settings.logo != blank %}
+          <img
+            src="{{ settings.logo | img_url: '180x' }}"
+            alt="{{ shop.name }}"
+            class="logo-image"
+            loading="lazy">
+        {% else %}
+          <span class="logo-text">{{ shop.name }}</span>
+        {% endif %}
+      </a>
+    </div>
+
+    <!-- Main Navigation (Desktop) -->
+    <nav class="header-nav" data-header-nav>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a href="/" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item">
+          <a href="/collections/all" class="nav-link">Shop</a>
+        </li>
+        <li class="nav-item">
+          <a href="/collections/new-arrivals" class="nav-link">New Arrivals</a>
+        </li>
+        <li class="nav-item">
+          <a href="/collections/sale" class="nav-link sale-link">Sale</a>
+        </li>
+        <li class="nav-item">
+          <a href="/pages/about" class="nav-link">About</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Header Icons / Actions -->
+    <div class="header-actions">
+      <!-- Search Icon (optional) -->
+      <button
+        class="header-action-btn search-toggle"
+        data-search-toggle
+        aria-label="Search">
+        <i class="fas fa-search"></i>
+      </button>
+
+      <!-- Account Link -->
+      <a
+        href="/account"
+        class="header-action-btn"
+        aria-label="Account">
+        <i class="fas fa-user"></i>
+      </a>
+
+      <!-- Cart Drawer Trigger Button -->
+      <button
+        class="cart-drawer-trigger header-action-btn cart-btn"
+        data-cart-drawer-toggle
+        aria-label="Cart">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count-badge" data-cart-count-display>{{ cart.item_count }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation (hidden by default) -->
+  <div class="mobile-nav" data-mobile-nav>
+    <div class="mobile-nav-header">
+      <span class="mobile-nav-title">Menu</span>
+      <button class="mobile-nav-close" data-mobile-nav-close>
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <ul class="mobile-nav-list">
+      <li class="mobile-nav-item">
+        <a href="/" class="mobile-nav-link">Home</a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="/collections/all" class="mobile-nav-link">Shop</a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="/collections/new-arrivals" class="mobile-nav-link">New Arrivals</a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="/collections/sale" class="mobile-nav-link sale-link">Sale</a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="/pages/about" class="mobile-nav-link">About</a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="/account" class="mobile-nav-link">
+          <i class="fas fa-user"></i>
+          My Account
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Search Bar (hidden by default) -->
+  <div class="search-bar" data-search-bar>
+    <div class="search-container">
+      <form
+        action="/search"
+        method="get"
+        class="search-form"
+        role="search">
+        <input
+          type="hidden"
+          name="type"
+          value="product">
+        <input
+          type="text"
+          name="q"
+          placeholder="Search for products..."
+          class="search-input"
+          autocomplete="off">
+        <button type="submit" class="search-submit">
+          <i class="fas fa-search"></i>
+        </button>
+        <button
+          type="button"
+          class="search-close"
+          data-search-close>
+          <i class="fas fa-times"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+</header>
+
+<style>
+  /* Header Styles */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    border-bottom: 1px solid #e5e5e5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  }
+
+  .header-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  /* Mobile Menu Toggle */
+  .mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    color: #1a1a1a;
+  }
+
+  /* Logo */
+  .header-logo {
+    flex-shrink: 0;
+  }
+
+  .logo-link {
+    text-decoration: none;
+    display: block;
+  }
+
+  .logo-image {
+    max-height: 45px;
+    width: auto;
+    display: block;
+  }
+
+  .logo-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #1a1a1a;
+  }
+
+  /* Desktop Navigation */
+  .header-nav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .nav-list {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+    position: relative;
+  }
+
+  .nav-link:hover {
+    color: #000;
+  }
+
+  .nav-link.sale-link {
+    color: #e74c3c;
+  }
+
+  .nav-link.sale-link:hover {
+    color: #c0392b;
+  }
+
+  /* Header Actions */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .header-action-btn {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    color: #333;
+    transition: color 0.2s;
+    text-decoration: none;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .header-action-btn:hover {
+    color: #000;
+  }
+
+  /* Cart Count Badge */
+  .cart-btn {
+    position: relative;
+  }
+
+  .cart-count-badge {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background: #1a1a1a;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 600;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    line-height: 1;
+  }
+
+  /* Mobile Navigation */
+  .mobile-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80%;
+    max-width: 320px;
+    height: 100vh;
+    background: white;
+    z-index: 1001;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-nav.active {
+    transform: translateX(0);
+  }
+
+  .mobile-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s
+    , visibility 0.3s;
+  }
+
+  .mobile-nav-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  .mobile-nav-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .mobile-nav-close {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+
+  .mobile-nav-list {
+    list-style: none;
+    padding: 1rem 0;
+    margin: 0;
+  }
+
+  .mobile-nav-item {
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .mobile-nav-link {
+    display: block;
+    padding: 1rem 1.5rem;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: background 0.2s;
+  }
+
+  .mobile-nav-link:hover {
+    background: #f9f9f9;
+  }
+
+  .mobile-nav-link.sale-link {
+    color: #e74c3c;
+  }
+
+  /* Search Bar */
+  .search-bar {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-bottom: 1px solid #eee;
+    padding: 1rem;
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .search-bar.active {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .search-container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .search-form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .search-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 40px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-input:focus {
+    border-color: #1a1a1a;
+  }
+
+  .search-submit,
+  .search-close {
+    background: #1a1a1a;
+    border: none;
+    color: white;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .search-submit:hover,
+  .search-close:hover {
+    background: #333;
+  }
+
+  .search-close {
+    background: #e0e0e0;
+    color: #333;
+  }
+
+  .search-close:hover {
+    background: #ccc;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .header-container {
+      padding: 0.75rem 1rem;
+      gap: 1rem;
+    }
+
+    .mobile-menu-toggle {
+      display: block;
+    }
+
+    .header-nav {
+      display: none;
+    }
+
+    .header-actions {
+      gap: 0.75rem;
+    }
+
+    .logo-text {
+      font-size: 1.2rem;
+    }
+
+    .logo-image {
+      max-height: 35px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .header-actions {
+      gap: 0.5rem;
+    }
+
+    .header-action-btn {
+      font-size: 1rem;
+      padding: 0.4rem;
+    }
+
+    .cart-count-badge {
+      top: -8px;
+      right: -10px;
+      font-size: 0.6rem;
+      min-width: 16px;
+      height: 16px;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    // Mobile Menu Functionality
+    const mobileToggle = document.querySelector('[data-mobile-menu-toggle]');
+    const mobileNav = document.querySelector('[data-mobile-nav]');
+    const mobileClose = document.querySelector('[data-mobile-nav-close]');
+    
+    // Create overlay for mobile menu
+    let mobileOverlay = document.querySelector('.mobile-nav-overlay');
+    if (!mobileOverlay && mobileNav) {
+      mobileOverlay = document.createElement('div');
+      mobileOverlay.className = 'mobile-nav-overlay';
+      document.body.appendChild(mobileOverlay);
+    }
+    
+    function openMobileMenu() {
+      if (mobileNav) {
+        mobileNav.classList.add('active');
+        mobileOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+    
+    function closeMobileMenu() {
+      if (mobileNav) {
+        mobileNav.classList.remove('active');
+        mobileOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+    
+    if (mobileToggle) {
+      mobileToggle.addEventListener('click', openMobileMenu);
+    }
+    
+    if (mobileClose) {
+      mobileClose.addEventListener('click', closeMobileMenu);
+    }
+    
+    if (mobileOverlay) {
+      mobileOverlay.addEventListener('click', closeMobileMenu);
+    }
+    
+    // Close mobile menu on link click
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', closeMobileMenu);
+    });
+    
+    // Search Bar Functionality
+    const searchToggle = document.querySelector('[data-search-toggle]');
+    const searchBar = document.querySelector('[data-search-bar]');
+    const searchClose = document.querySelector('[data-search-close]');
+    
+    function openSearch() {
+      if (searchBar) {
+        searchBar.classList.add('active');
+        const searchInput = searchBar.querySelector('.search-input');
+        if (searchInput) searchInput.focus();
+      }
+    }
+    
+    function closeSearch() {
+      if (searchBar) {
+        searchBar.classList.remove('active');
+      }
+    }
+    
+    if (searchToggle) {
+      searchToggle.addEventListener('click', openSearch);
+    }
+    
+    if (searchClose) {
+      searchClose.addEventListener('click', closeSearch);
+    }
+    
+    // Close search on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeSearch();
+        closeMobileMenu();
+      }
+    });
+    
+    // Header scroll effect (optional)
+    const header = document.querySelector('.site-header');
+    let lastScroll = 0;
+    
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      if (currentScroll > 100) {
+        header.style.boxShadow = '0 4px 15px rgba(0,0,0,0.08)';
+      } else {
+        header.style.boxShadow = '0 2px 8px rgba(0,0,0,0.03)';
+      }
+    });
+  })();
+</script>
+
+{% comment %} 
+  ============================================ 
+  HOW TO USE THIS HEADER 
+  ============================================ 
+  OPTION 1: As a section (Shopify 2.0)
+  1. Save this file as sections/header.liquid
+  2. Go to Online Store > Themes > Customize
+  3. Add the "Header" section 
+  OPTION 2: As a snippet
+  1. Save this file as snippets/header.liquid
+  2. In your theme.liquid, replace existing header with:
+  {% render 'header' %} 
+  ============================================ 
+  REQUIRED DEPENDENCIES 
+  ============================================ 
+  Font Awesome Icons (add to theme.liquid <head>): 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> 
+  Cart Drawer (make sure cart-drawer.liquid is rendered): 
+  {% render 'cart-drawer' %} 
+  ============================================ 
+  CUSTOMIZATION 
+  ============================================
+  - Change max-width in .header-container to adjust header width
+  - Modify colors by editing the CSS variables
+  - Add/remove navigation links in the nav-list section
+  - Adjust logo size by changing max-height in .logo-image 
+  ============================================ 
+  SHOPIFY SETTINGS (for section mode) 
+  ============================================ 
+  Add this schema at the bottom of the file if using as a section:
+{% endcomment %}
+
+{% schema %}
+  {
+    "name": "Simple Header",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Header Settings"
+      }, {
+        "type": "checkbox",
+        "id": "sticky_header",
+        "label": "Make header sticky",
+        "default": true
+      }, {
+        "type": "color",
+        "id": "header_bg",
+        "label": "Background color",
+        "default": "#ffffff"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Simple Header",
+        "category": "Header"
+      }
+    ]
+  }
+{% endschema %}

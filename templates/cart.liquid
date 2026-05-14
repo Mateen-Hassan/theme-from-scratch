@@ -1,0 +1,879 @@
+{% comment %} 
+          Shopify Cart Page Template (cart.liquid) 
+          Simple, clean, and responsive design. 
+          Compatible with Shopify Online Store 2.0
+{% endcomment %}
+
+{% if cart.item_count == 0 %}
+  <div class="cart-empty" style="text-align: center; padding: 4rem 1rem; max-width: 600px; margin: 0 auto;">
+    <svg
+      width="120"
+      height="120"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style="margin: 0 auto 1.5rem; opacity: 0.5;">
+      <path
+        d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.7 15.3C4.3 15.7 4.6 16.5 5.1 16.5H16M17 13L19 19M19 19C18.4 19 17.8 19.6 17.8 20.2C17.8 20.8 18.4 21.4 19 21.4C19.6 21.4 20.2 20.8 20.2 20.2C20.2 19.6 19.6 19 19 19ZM8 20.2C8 20.8 7.4 21.4 6.8 21.4C6.2 21.4 5.6 20.8 5.6 20.2C5.6 19.6 6.2 19 6.8 19C7.4 19 8 19.6 8 20.2Z"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none" />
+    </svg>
+    <h2 style="font-size: 1.75rem; margin-bottom: 1rem;">Your cart is empty</h2>
+    <p style="margin-bottom: 2rem; color: #6b7280;">Looks like you haven't added anything to your cart yet.</p>
+    <a
+      href="/collections/all"
+      class="continue-shopping-btn"
+      style="display: inline-block; background: #1a1a1a; color: white; padding: 0.875rem 2rem; border-radius: 100px; text-decoration: none; font-weight: 500;">Continue shopping</a>
+  </div>
+{% else %}
+
+  <div class="cart-page-wrapper">
+    <div class="cart-container">
+      <h1 class="cart-title">Your cart
+        <span class="cart-count">({{ cart.item_count }} {{ cart.item_count | pluralize: 'item', 'items' }})</span>
+      </h1>
+
+      <form
+        action="/cart"
+        method="post"
+        novalidate
+        class="cart-form">
+        <div class="cart-grid">
+          <!-- CART ITEMS SECTION -->
+          <div class="cart-items">
+            {% for item in cart.items %}
+              <div class="cart-item" data-item-id="{{ item.id }}">
+                <div class="cart-item-image">
+                  <img
+                    src="{{ item.image | img_url: '300x300', crop: 'center' }}"
+                    alt="{{ item.title | escape }}"
+                    loading="lazy">
+                </div>
+
+                <div class="cart-item-details">
+                  <div class="cart-item-header">
+                    <a href="{{ item.url }}" class="cart-item-title">{{ item.product.title }}</a>
+                    {% if item.variant.title != 'Default Title' %}
+                      <div class="cart-item-variant">{{ item.variant.title }}</div>
+                    {% endif %}
+                    {% if item.properties %}
+                      <div class="cart-item-properties">
+                        {% for property in item.properties %}
+                          {% unless property.last == blank %}
+                            <div class="property">
+                              <span>{{ property.first }}:</span>
+                              {{ property.last }}</div>
+                          {% endunless %}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  </div>
+
+                  <div class="cart-item-price-mobile">
+                    {{ item.final_price | money }}
+                  </div>
+
+                  <div class="cart-item-actions">
+                    <div class="quantity-wrapper">
+                      <button
+                        type="button"
+                        class="qty-btn qty-decrease"
+                        aria-label="Decrease quantity"
+                        data-line-id="{{ forloop.index }}">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                      <input
+                        type="number"
+                        name="updates[]"
+                        id="updates_{{ item.id }}"
+                        value="{{ item.quantity }}"
+                        min="1"
+                        aria-label="Quantity"
+                        class="cart-item-qty"
+                        data-line-id="{{ forloop.index }}">
+                      <button
+                        type="button"
+                        class="qty-btn qty-increase"
+                        aria-label="Increase quantity"
+                        data-line-id="{{ forloop.index }}">
+                        <i class="fas fa-plus"></i>
+                      </button>
+                    </div>
+
+                    <div class="cart-item-remove">
+                      <button
+                        type="button"
+                        class="remove-btn"
+                        data-line-id="{{ forloop.index }}">
+                        <i class="fas fa-trash-alt"></i>
+                        <span>Remove</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="cart-item-price-desktop">
+                    {{ item.final_price | money }}
+                  </div>
+                </div>
+
+                <div class="cart-item-line-total">
+                  <div class="item-total-label">Subtotal</div>
+                  <div class="item-total-price" data-line-total="{{ item.final_line_price }}">{{ item.final_line_price | money }}</div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <!-- CART SUMMARY / SIDEBAR -->
+          <div class="cart-summary">
+            <div class="summary-card">
+              <h3 class="summary-title">Order summary</h3>
+
+              <div class="summary-row">
+                <span>Subtotal</span>
+                <span>{{ cart.total_price | money }}</span>
+              </div>
+
+              {% if cart.cart_level_discount_applications.size > 0 %}
+                <div class="summary-row discount-row">
+                  <span>Discounts</span>
+                  <span>
+                    {% for discount in cart.cart_level_discount_applications %}
+                      -{{ discount.total_allocated_amount | money }}<br>
+                      <small>({{ discount.title }})</small>
+                    {% endfor %}
+                  </span>
+                </div>
+              {% endif %}
+
+              <div class="summary-row shipping-note">
+                <span>Shipping</span>
+                <span>Calculated at checkout</span>
+              </div>
+
+              <div class="summary-total">
+                <span>Total</span>
+                <span class="total-amount">{{ cart.total_price | money }}</span>
+              </div>
+
+              {% if cart.total_price > 0 %}
+                <div class="tax-note">
+                  Taxes and shipping calculated at checkout
+                </div>
+              {% endif %}
+
+              <button
+                type="submit"
+                name="checkout"
+                class="checkout-btn">
+                <i class="fas fa-lock"></i>
+                Proceed to checkout
+              </button>
+
+              <div class="additional-checkout-buttons">
+                {{ content_for_additional_checkout_buttons }}
+              </div>
+
+              <a href="/collections/all" class="continue-shopping-link">
+                <i class="fas fa-arrow-left"></i>
+                Continue shopping
+              </a>
+            </div>
+
+            {% if cart.total_price > 0 %}
+              <div class="secure-message">
+                <i class="fas fa-shield-alt"></i>
+                Secure checkout · SSL encrypted
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- hidden update button fallback + notes field (optional) -->
+        <div class="cart-footer-actions">
+          <div class="cart-notes">
+            <label for="cart-note">Order notes (optional)</label>
+            <textarea
+              name="note"
+              id="cart-note"
+              rows="3"
+              placeholder="Gift message, special instructions, etc.">{{ cart.note }}</textarea>
+          </div>
+          <div class="action-buttons">
+            <button
+              type="submit"
+              name="update"
+              class="update-cart-btn"
+              id="update-cart-btn">
+              <i class="fas fa-rotate-right"></i>
+              Update cart
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <style>
+    /* SIMPLE CART PAGE STYLES */
+    .cart-page-wrapper {
+      max-width: 1280px;
+      margin: 2rem auto;
+      padding: 0 1.5rem 3rem;
+      font-family: -apple-system
+      , BlinkMacSystemFont
+      , 'Segoe UI'
+      , Roboto
+      , Helvetica
+      , Arial
+      , sans-serif;
+    }
+
+    .cart-container {
+      width: 100%;
+    }
+
+    .cart-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 1.75rem;
+      letter-spacing: -0.01em;
+      color: #111;
+    }
+
+    .cart-count {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #5b5b5b;
+    }
+
+    /* GRID LAYOUT */
+    .cart-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 2rem;
+    }
+
+    /* CART ITEMS */
+    .cart-item {
+      display: grid;
+      grid-template-columns: 100px 1fr auto;
+      gap: 1.25rem;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid #e5e5e5;
+      align-items: start;
+    }
+
+    .cart-item:first-child {
+      padding-top: 0;
+    }
+
+    .cart-item-image img {
+      width: 100%;
+      border-radius: 12px;
+      background: #f9f9f9;
+      border: 1px solid #eee;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+    }
+
+    .cart-item-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .cart-item-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .cart-item-title {
+      font-weight: 600;
+      font-size: 1.05rem;
+      text-decoration: none;
+      color: #000;
+      transition: color 0.2s;
+    }
+
+    .cart-item-title:hover {
+      color: #3a6ea5;
+    }
+
+    .cart-item-variant {
+      font-size: 0.8rem;
+      color: #6b6b6b;
+      text-transform: capitalize;
+    }
+
+    .cart-item-properties {
+      margin-top: 6px;
+      font-size: 0.75rem;
+      color: #6b6b6b;
+    }
+
+    .property span {
+      font-weight: 500;
+    }
+
+    .cart-item-price-mobile {
+      display: none;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .cart-item-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      margin-top: 0.25rem;
+    }
+
+    .quantity-wrapper {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid #ddd;
+      border-radius: 48px;
+      background: white;
+    }
+
+    .qty-btn {
+      background: transparent;
+      border: none;
+      width: 36px;
+      height: 40px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #333;
+      transition: background 0.2s;
+      border-radius: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qty-btn:hover {
+      background: #f2f2f2;
+    }
+
+    .cart-item-qty {
+      width: 50px;
+      text-align: center;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 0;
+      background: transparent;
+      -moz-appearance: textfield;
+    }
+
+    .cart-item-qty::-webkit-inner-spin-button,
+    .cart-item-qty::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .remove-btn {
+      background: none;
+      border: none;
+      color: #888;
+      cursor: pointer;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: color 0.2s;
+    }
+
+    .remove-btn:hover {
+      color: #d32f2f;
+    }
+
+    .cart-item-price-desktop {
+      font-weight: 600;
+      font-size: 1rem;
+      color: #111;
+    }
+
+    .cart-item-line-total {
+      text-align: right;
+      min-width: 90px;
+    }
+
+    .item-total-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #7a7a7a;
+      margin-bottom: 5px;
+    }
+
+    .item-total-price {
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    /* SUMMARY CARD */
+    .cart-summary {
+      position: sticky;
+      top: 20px;
+      align-self: start;
+    }
+
+    .summary-card {
+      background: white;
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      border: 1px solid #ebebeb;
+    }
+
+    .summary-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.9rem;
+      font-size: 0.95rem;
+      color: #2c2c2c;
+    }
+
+    .discount-row {
+      color: #117f4d;
+    }
+
+    .shipping-note {
+      color: #6c6c6c;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin: 1rem 0 0.5rem;
+      padding-top: 0.8rem;
+      border-top: 2px solid #eaeaea;
+    }
+
+    .total-amount {
+      color: #000;
+    }
+
+    .tax-note {
+      font-size: 0.7rem;
+      color: #777;
+      margin: 0.5rem 0 1rem;
+    }
+
+    .checkout-btn {
+      background: #000;
+      color: white;
+      width: 100%;
+      padding: 0.9rem;
+      border: none;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 0.5rem;
+    }
+
+    .checkout-btn:hover {
+      background: #2c2c2c;
+    }
+
+    .additional-checkout-buttons {
+      margin-top: 1rem;
+    }
+
+    .continue-shopping-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      color: #555;
+      text-decoration: none;
+      text-align: center;
+      width: 100%;
+      transition: color 0.2s;
+    }
+
+    .continue-shopping-link i {
+      margin-right: 6px;
+    }
+
+    .continue-shopping-link:hover {
+      color: #000;
+    }
+
+    .secure-message {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.7rem;
+      color: #5f5f5f;
+    }
+
+    /* CART FOOTER & NOTES */
+    .cart-footer-actions {
+      margin-top: 2rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: start;
+      border-top: 1px solid #e0e0e0;
+      padding-top: 1.8rem;
+    }
+
+    .cart-notes {
+      width: 100%;
+    }
+
+    .cart-notes label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .cart-notes textarea {
+      width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 16px;
+      padding: 0.75rem;
+      font-family: inherit;
+      font-size: 0.85rem;
+      resize: vertical;
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .update-cart-btn {
+      background: #f4f4f6;
+      border: 1px solid #ccc;
+      padding: 0.7rem 1.5rem;
+      border-radius: 40px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .update-cart-btn:hover {
+      background: #e8e8ec;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 800px) {
+      .cart-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .cart-summary {
+        position: static;
+      }
+
+      .cart-item {
+        grid-template-columns: 75px 1fr;
+        gap: 1rem;
+        position: relative;
+      }
+
+      .cart-item-line-total {
+        grid-column: 2 / -1;
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 0.5rem;
+        border-top: 1px dashed #ededed;
+        padding-top: 0.75rem;
+      }
+
+      .item-total-label {
+        margin-bottom: 0;
+      }
+
+      .cart-item-price-desktop {
+        display: none;
+      }
+
+      .cart-item-price-mobile {
+        display: block;
+        margin: 0.3rem 0 0.2rem;
+        font-weight: 600;
+      }
+
+      .cart-item-details {
+        gap: 0.5rem;
+      }
+
+      .cart-footer-actions {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .action-buttons {
+        justify-content: stretch;
+      }
+
+      .update-cart-btn {
+        width: 100%;
+        text-align: center;
+      }
+
+      .cart-item-actions {
+        flex-wrap: wrap;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .cart-page-wrapper {
+        padding: 0 1rem 2rem;
+      }
+
+      .cart-title {
+        font-size: 1.5rem;
+      }
+
+      .quantity-wrapper {
+        transform: scale(0.95);
+      }
+
+      .remove-btn span {
+        display: none;
+      }
+
+      .remove-btn i {
+        font-size: 1.2rem;
+        margin-right: 0;
+      }
+
+      .remove-btn {
+        padding: 0 8px;
+      }
+    }
+
+    /* loading subtle animation */
+    .updating {
+      opacity: 0.6;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+  </style>
+
+  <script>
+    (function() {
+      // Helper to show loading state on cart form
+      const form = document.querySelector('.cart-form');
+      const updateBtn = document.getElementById('update-cart-btn');
+      const checkoutBtn = document.querySelector('.checkout-btn');
+      
+      function setLoading(state) {
+        if (state) {
+          form.classList.add('updating');
+        } else {
+          form.classList.remove('updating');
+        }
+      }
+      
+      // Update cart via standard submit OR dynamic quantity
+      function updateCartWithChanges(additionalData = {}) {
+        setLoading(true);
+        const formData = new FormData(form);
+        for (let [key, val] of Object.entries(additionalData)) {
+          formData.set(key, val);
+        }
+        
+        fetch(window.location.pathname, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        }).then(response => {
+          if (response.redirected || response.ok) {
+            window.location.reload();
+          } else {
+            setLoading(false);
+            alert('Could not update cart. Please try again.');
+          }
+        }).catch(() => {
+          setLoading(false);
+          alert('Something went wrong. Please refresh.');
+        });
+      }
+      
+      // Quantity buttons logic
+      document.querySelectorAll('.qty-decrease').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          const lineId = this.getAttribute('data-line-id');
+          const qtyInput = document.querySelector(`.cart-item-qty[data-line-id="${lineId}"]`);
+          if (qtyInput) {
+            let currentVal = parseInt(qtyInput.value, 10);
+            if (isNaN(currentVal)) currentVal = 1;
+            const newVal = Math.max(1, currentVal - 1);
+            qtyInput.value = newVal;
+            // Trigger immediate update for better UX
+            const updatesInput = document.createElement('input');
+            updatesInput.type = 'hidden';
+            updatesInput.name = `updates[]`;
+            updatesInput.value = newVal;
+            // We need to send line index mapping: but more robust: just get updates array
+            const lineIndex = parseInt(lineId, 10);
+            const updatesArray = [];
+            const allInputs = document.querySelectorAll('.cart-item-qty');
+            allInputs.forEach((input, idx) => {
+              let val = parseInt(input.value, 10);
+              if (isNaN(val)) val = 1;
+              updatesArray[ idx ] = val;
+            });
+            const formData = new FormData(form);
+            // remove old updates
+            for (let pair of formData.entries()) {
+              if (pair[0] === 'updates[]') formData.delete('updates[]');
+            }
+            updatesArray.forEach(val => {
+              formData.append('updates[]', val);
+            });
+            formData.set('update', 'Update');
+            setLoading(true);
+            fetch(window.location.pathname, {
+              method: 'POST',
+              body: formData,
+              headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            }).then(res => {
+              if (res.ok || res.redirected) window.location.reload();
+              else { setLoading(false); alert('Error updating'); }
+            }).catch(() => { setLoading(false); alert('Update failed'); });
+          }
+        });
+      });
+      
+      document.querySelectorAll('.qty-increase').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          const lineId = this.getAttribute('data-line-id');
+          const qtyInput = document.querySelector(`.cart-item-qty[data-line-id="${lineId}"]`);
+          if (qtyInput) {
+            let currentVal = parseInt(qtyInput.value, 10);
+            if (isNaN(currentVal)) currentVal = 1;
+            const newVal = currentVal + 1;
+            qtyInput.value = newVal;
+            const allInputs = document.querySelectorAll('.cart-item-qty');
+            const updatesArray = [];
+            allInputs.forEach((input, idx) => {
+              let val = parseInt(input.value, 10);
+              if (isNaN(val)) val = 1;
+              updatesArray[idx] = val;
+            });
+            const formData = new FormData(form);
+            for (let pair of formData.entries()) {
+              if (pair[0] === 'updates[]') formData.delete('updates[]');
+            }
+            updatesArray.forEach(val => formData.append('updates[]', val));
+            formData.set('update', 'Update');
+            setLoading(true);
+            fetch(window.location.pathname, {
+              method: 'POST',
+              body: formData,
+              headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            }).then(res => {
+              if (res.ok || res.redirected) window.location.reload();
+              else { setLoading(false); alert('Failed to update'); }
+            }).catch(() => { setLoading(false); alert('Error'); });
+          }
+        });
+      });
+      
+      // Remove button actions
+      document.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const lineId = this.getAttribute('data-line-id');
+          const idx = parseInt(lineId, 10) - 1;
+          const allQtyInputs = document.querySelectorAll('.cart-item-qty');
+          const updates = [];
+          allQtyInputs.forEach((input, i) => {
+            if (i === idx) {
+              updates.push(0);
+            } else {
+              let val = parseInt(input.value, 10);
+              if (isNaN(val)) val = 1;
+              updates.push(val);
+            }
+          });
+          const formData = new FormData(form);
+          for (let pair of formData.entries()) {
+            if (pair[0] === 'updates[]') formData.delete('updates[]');
+          }
+          updates.forEach(val => formData.append('updates[]', val));
+          formData.set('update', 'Update');
+          setLoading(true);
+          fetch(window.location.pathname, {
+            method: 'POST',
+            body: formData,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+          }).then(res => {
+            if (res.ok || res.redirected) window.location.reload();
+            else { setLoading(false); alert('Remove failed'); }
+          }).catch(() => { setLoading(false); alert('Error'); });
+        });
+      });
+      
+      // Normal update button behavior
+      if (updateBtn) {
+        updateBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          updateCartWithChanges({ update: 'Update' });
+        });
+      }
+      
+      // manually handle checkout to ensure loading state (optional)
+      if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', (e) => {
+          if (!form.classList.contains('updating')) {
+            setLoading(true);
+            form.submit();
+          }
+        });
+      }
+      
+      // auto-sync note field on blur? but we keep classic update button
+      const noteField = document.getElementById('cart-note');
+      if (noteField) {
+        let noteTimeout;
+        noteField.addEventListener('input', () => {
+          clearTimeout(noteTimeout);
+          noteTimeout = setTimeout(() => {
+            const formData = new FormData(form);
+            fetch(window.location.pathname, {
+              method: 'POST',
+              body: formData,
+              headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            }).then(res => { if (res.ok) { /* just sync note, no reload */ } });
+          }, 800);
+        });
+      }
+    })();
+  </script>
+
+{% endif %}

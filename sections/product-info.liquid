@@ -1,35 +1,42 @@
 {% comment %} 
-      Simple Product Page Section
+                                                                    Simple Product Page Section
 {% endcomment %}
-
+{{ 'splide.min.css' | asset_img_url | stylesheet_tag }}
 <section class="custom-product-page">
   <div class="page-width">
 
     <div class="product-layout">
-
-      <!-- Product Images -->
-      <div class="product-images">
-        {% if product.featured_image %}
-          <img
-            id="main-product-image"
-            src="{{ product.featured_image | image_url: width: 900 }}"
-            alt="{{ product.title }}"
-            width="900"
-            height="900">
-        {% endif %}
-
-        <div class="product-thumbnails">
-          {% for image in product.images %}
-            <img
-              class="thumbnail"
-              src="{{ image | image_url: width: 150 }}"
-              data-full-image="{{ image | image_url: width: 900 }}"
-              alt="{{ product.title }}"
-              width="150"
-              height="150">
-          {% endfor %}
+      <section class="splide" aria-label="Splide Basic HTML Example">
+        <div class="splide__track">
+          <ul class="splide__list">
+            {% for image in product.images %}
+              <li class="splide__slide">
+                <img
+                  id="main-product-image"
+                  src="{{ product.featured_image | image_url: width: 500 }}"
+                  alt="{{ product.title }}"
+                  width="500"
+                  height="500">
+              </li>
+            {% endfor %}
+          </ul>
         </div>
-      </div>
+      </section>
+      <!-- Product Images -->
+      {% comment %} <div class="product-images">
+                                                                                                                                        {% if product.featured_image %}
+                                                                                                                                          <img
+                                                                                                                                            id="main-product-image"
+                                                                                                                                            src="{{ product.featured_image | image_url: width: 500 }}"
+                                                                                                                                            alt="{{ product.title }}"
+                                                                                                                                            width="500"
+                                                                                                                                            height="500">
+                                                                                                                                        {% endif %}
+                                
+                                                                                                                                        <div class="product-thumbnails">
+                                         
+                                                                                                        </div> {% endcomment %}
+
 
       <!-- Product Info -->
       <div class="product-info">
@@ -37,7 +44,7 @@
         <h1>{{ product.title }}</h1>
 
         <p class="product-price">
-          {{ product.price | money }}
+          {{ product.price | money_with_currency }}
         </p>
 
         <div class="product-description">
@@ -91,7 +98,7 @@
           <button type="submit" class="add-to-cart-btn">
             Add to Cart
           </button>
-
+          {{ form | payment_button }}
         {% endform %}
 
       </div>
@@ -99,9 +106,16 @@
     </div>
 
   </div>
+  <script src="{{'splide.min.js' |  asset_url}}"></script>
+  <script>
+    new Splide( '.splide' ).mount();
+  </script>
 </section>
 
 <style>
+  .splide {
+    max-width: 500px;
+  }
   .custom-product-page {
     padding: 60px 20px;
   }
