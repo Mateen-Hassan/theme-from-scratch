@@ -23,9 +23,18 @@
         "collection": "frontpage",
         "products_to_show": 4
       }
+    },
+    "header_Wa7RAN": {
+      "type": "header",
+      "name": "Simple Header",
+      "settings": {
+        "sticky_header": true,
+        "header_bg": "#ffffff"
+      }
     }
   },
   "order": [
+    "header_Wa7RAN",
     "heading",
     "featured_collection_B9BdaN"
   ]
