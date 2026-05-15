@@ -11,10 +11,11 @@
   "sections": {
     "header_Wa7RAN": {
       "type": "header",
+      "disabled": true,
       "name": "Simple Header",
       "settings": {
         "sticky_header": true,
-        "header_bg": "#e42929"
+        "header_bg": "#FFFFFF"
       }
     },
     "heading": {
