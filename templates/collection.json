@@ -7,36 +7,29 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
- {
-    "sections": {
-      "header_Wa7RAN": {
-        "type": "header",
-        "name": "Simple Header",
-        "settings": {
-          "sticky_header": true,
-          "header_bg": "#e42929"
-        }
-      },
-      "heading": {
-        "type": "headings",
-        "settings": {
-          "text": "Hello world"
-        }
-      },
-      "featured_collection_B9BdaN": {
-        "type": "featured-collection",
-        "name": "Featured Collection",
-        "settings": {
-          "heading": "Featured Collection",
-          "collection": "frontpage",
-          "products_to_show": 4
-        }
+{
+  "sections": {
+    "header_Wa7RAN": {
+      "type": "header",
+      "name": "Simple Header",
+      "settings": {
+        "sticky_header": true,
+        "header_bg": "#ffffff",
+        "main_menu": "main-menu"
       }
     },
-    "order": [
-      "header_Wa7RAN",
-      "heading",
-      "featured_collection_B9BdaN"
-    ]
-  }
-  
+    "featured_collection_B9BdaN": {
+      "type": "featured-collection",
+      "name": "Featured Collection",
+      "settings": {
+        "heading": "Featured Collection",
+        "collection": "frontpage",
+        "products_to_show": 4
+      }
+    }
+  },
+  "order": [
+    "header_Wa7RAN",
+    "featured_collection_B9BdaN"
+  ]
+}
