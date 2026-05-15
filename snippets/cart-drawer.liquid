@@ -723,7 +723,11 @@
     } else {
       initCartDrawer();
     }
-    
+    document.addEventListener('cart:updated', () => {
+  // This code runs whenever 'cart:updated' is dispatched
+  console.log('Cart was updated!')
+  ;})
+
     // Expose for global use
     window.CartDrawer = {
       open: () => cartDrawer && cartDrawer.open(),

@@ -1,0 +1,40 @@
+<!-- File: sections/dynamic-cart.liquid -->
+<div id="shopify-section-{{ section.id }}">
+  <h1>I love my shopify dev personality</h1>
+
+  <div class="container">
+    {% for item in cart.items %}
+      <h3>{{ item.title }}</h3>
+      <h3>{{ item.variant_id }}</h3>
+    {% endfor %}
+    <h3>{{ cart.total_price }}</h3>
+  </div>
+
+</div>
+
+<script>
+  function refreshCartSection() {
+  // 1. Define the section you want to target
+  const sectionName = 'dynamic-cart'; 
+  
+  // 2. Fetch the fresh HTML from Shopify's Section Rendering API
+  fetch(`${window.Shopify.routes.root}??sections=${sectionName}`)
+    .then(response => response.json())
+    .then(data => {
+      // 3. Extract the new HTML string from the response object
+      const newHtml = data[sectionName];
+      
+      // 4. Find your existing container on the page
+      const currentContainer = document.querySelector('.container');
+      
+      // 5. Parse the new HTML to extract just the .container contents
+      const parser = new DOMParser();
+      const htmlDoc = parser.parseFromString(newHtml, 'text/html');
+      const newContainerContent = htmlDoc.querySelector('.container').innerHTML;
+      
+      // 6. Inject the new items list into your live page
+      currentContainer.innerHTML = newContainerContent;
+    })
+    .catch(error => console.error('Error updating cart view:', error));
+  }
+</script>

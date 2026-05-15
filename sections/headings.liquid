@@ -1,4 +1,36 @@
-<h1>{{ section.settings.text }}</h1>
+<style>
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
+
+
+<div class="container">
+  <h1>{{ section.settings.text }}</h1>
+  <button class="checklist">Click to render the product</button>
+  <div class="product-render"></div>
+</div>
+
+
+<script>
+  const button=document.querySelector('.checklist');
+  button.addEventListener('click',()=>{
+  fetch(`${window.Shopify.routes.root}products/the-videographer-snowboard?sections=product-info`)
+  .then((response)=>{
+    return response.json();
+  })
+   .then((data)=>{
+    
+    let newDiv= document.createElement('div')
+    newDiv.innerHTML=data["product-info"]
+  document.querySelector('.product-render').innerHTML=data["product-info"];
+  console.log(newDiv)
+   })
+  })
+</script>
 {% schema %}
   {
     "name": "Heading",

@@ -1,11 +1,19 @@
 {% comment %} 
-                                                                    Simple Product Page Section
+                                                                                                                      Simple Product Page Section
 {% endcomment %}
 {{ 'splide.min.css' | asset_img_url | stylesheet_tag }}
 <section class="custom-product-page">
   <div class="page-width">
 
     <div class="product-layout">
+      {% comment %} {% if product.featured_image %}
+                                                                                        <img
+                                                                                          id="main-product-image"
+                                                                                          src="{{ product.featured_image | image_url: width: 500 }}"
+                                                                                          alt="{{ product.title }}"
+                                                                                          width="500"
+                                                                                          height="500">
+                                                                  {% endif %} {% endcomment %}
       <section class="splide" aria-label="Splide Basic HTML Example">
         <div class="splide__track">
           <ul class="splide__list">
@@ -24,18 +32,18 @@
       </section>
       <!-- Product Images -->
       {% comment %} <div class="product-images">
-                                                                                                                                        {% if product.featured_image %}
-                                                                                                                                          <img
-                                                                                                                                            id="main-product-image"
-                                                                                                                                            src="{{ product.featured_image | image_url: width: 500 }}"
-                                                                                                                                            alt="{{ product.title }}"
-                                                                                                                                            width="500"
-                                                                                                                                            height="500">
-                                                                                                                                        {% endif %}
-                                
-                                                                                                                                        <div class="product-thumbnails">
-                                         
-                                                                                                        </div> {% endcomment %}
+                                                                                                                                                                                                                                                                                                                                                {% if product.featured_image %}
+                                                                                                                                                                                                                                                                                                                                                  <img
+                                                                                                                                                                                                                                                                                                                                                    id="main-product-image"
+                                                                                                                                                                                                                                                                                                                                                    src="{{ product.featured_image | image_url: width: 500 }}"
+                                                                                                                                                                                                                                                                                                                                                    alt="{{ product.title }}"
+                                                                                                                                                                                                                                                                                                                                                    width="500"
+                                                                                                                                                                                                                                                                                                                                                    height="500">
+                                                                                                                                                                                                                                                                                                                                                {% endif %}
+                                                                                  
+                                                                                                                                                                                                                                                                                                                                                <div class="product-thumbnails">
+                                                                                           
+                                                                                                                                                                                                                                                              </div> {% endcomment %}
 
 
       <!-- Product Info -->
@@ -102,10 +110,11 @@
         {% endform %}
 
       </div>
-
+    {% comment %} {% render 'cart-items' %} {% endcomment %}
     </div>
-
+    <div class="render-here"></div>
   </div>
+
   <script src="{{'splide.min.js' |  asset_url}}"></script>
   <script>
     new Splide( '.splide' ).mount();
@@ -205,8 +214,27 @@
     }
   }
 </style>
-
 <script>
+  const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+  let startButton= document.querySelector('.add-to-cart-btn');
+  startButton.addEventListener('click',async()=>{
+    console.log("Hello world")
+    await delay(10000);
+    fetch(`${window.Shopify.routes.root} ?sections=cart-items`)
+    .then((response)=>{
+      return response.json()
+    })
+    .then((data)=>{
+      console.log(data)
+      document.querySelector('.render-here').innerHTML=data["cart-items"]
+    })
+    .catch(error => console.error('Error updating cart view:', error));
+  })
+</script>
+<script>
+   document.querySelector('.add-to-cart-btn').addEventListener("click", () => {
+  document.dispatchEvent(new Event('cart:updated'));
+  });
   document.addEventListener("DOMContentLoaded", function () {
   
   const thumbnails = document.querySelectorAll(".thumbnail");
