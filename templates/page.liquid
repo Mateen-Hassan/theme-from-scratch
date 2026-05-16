@@ -1,31 +1,20 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
-{
-  "sections": {
-    "featured_collection_B9BdaN": {
-      "type": "featured-collection",
-      "name": "Featured Collection",
-      "settings": {
-        "heading": "Featured Collection",
-        "collection": "frontpage",
-        "products_to_show": 4
-      }
-    },
-    "product_info_mP4jUy": {
-      "type": "product-info",
-      "name": "Custom Product Page",
-      "settings": {}
-    }
-  },
-  "order": [
-    "product_info_mP4jUy",
-    "featured_collection_B9BdaN"
-  ]
-}
+cart apis 
+we need cart api to interact with the cart
+template language is not ables to handle cartt itself
+That is why cart api is here 
+1. Method 
+2. Element (form element)
+
+
+{% for item in cart.items %}
+    <div class="cart-line-item">
+      <a href="{{item.url}}">
+        {{ item.image | image_url: width: width 100 | image_tag }}
+      </a>
+      <h6>{{item.product.title}}</h6>
+ <p>{{item.product.price |  money_with_currency}}</p>
+ {% for property in items.properties %}
+  <p>{{property.first}}: {{property.last}}</p>
+ {% endfor %}
+      </div>
+  {% endfor %}
