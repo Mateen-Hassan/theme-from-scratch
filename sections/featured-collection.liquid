@@ -1,5 +1,5 @@
 {% comment %} 
-  Simple Featured Collection Section
+                                                  Simple Featured Collection Section
 {% endcomment %}
 
 <section class="featured-collection">
@@ -14,6 +14,12 @@
     {% assign collection = collections[section.settings.collection] %}
 
     <div class="featured-collection__grid">
+      {% for block in section.blocks %}
+        {%- case block.type -%}
+          {%- when "heading" -%}
+            <h1>{{ block.settings.heading }}</h1>
+        {% endcase %}
+      {% endfor %}
       {% for product in collection.products limit: section.settings.products_to_show %}
 
         <div class="featured-collection__card">
@@ -35,9 +41,28 @@
           <a href="{{ product.url }}" class="featured-collection__button">
             View Product
           </a>
-
+          <form method="post" action="/cart/add">
+            <input
+              type="hidden"
+              name="items[0][id]"
+              value="{{product.selected_or_first_available_variant.id}}">
+            <input
+              type="hidden"
+              name="items[0][quantity]"
+              value="1">
+            <input
+              type="hidden"
+              name="items[1][id]"
+              value="46955470192811">
+            <input
+              type="hidden"
+              name="items[1][quantity]"
+              value="1">
+            <button type="submit" class="button">
+              Add to Cart
+            </button>
+          </form>
         </div>
-
       {% endfor %}
     </div>
 
@@ -117,6 +142,20 @@
         "max": 12,
         "step": 1,
         "default": 4
+      }
+    ],
+    "blocks": [
+      {
+        "type": "heading",
+        "name": "Heading",
+        "settings": [
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Hello, world!"
+          }
+        ]
       }
     ],
     "presets": [
