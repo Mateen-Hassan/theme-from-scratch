@@ -20,6 +20,21 @@
     },
     "featured_collection_B9BdaN": {
       "type": "featured-collection",
+      "blocks": {
+        "heading_wpjpqY": {
+          "type": "heading",
+          "settings": {
+            "heading": "Hello, world!",
+            "product_1": "the-3p-fulfilled-snowboard",
+            "product_2": "the-collection-snowboard-hydrogen",
+            "product_3": "the-3p-fulfilled-snowboard",
+            "discount_percentage": 10
+          }
+        }
+      },
+      "block_order": [
+        "heading_wpjpqY"
+      ],
       "name": "Featured Collection",
       "settings": {
         "heading": "Featured Collection",
