@@ -2,7 +2,7 @@
   <div>
     <div class="cart-line-item">
       <a href="{{item.url}}">
-        {{ item.image | image_url: width: width 100 | image_tag }}
+        {{ item.image | image_url: width: 100 | image_tag }}
       </a>
       <h6>{{ item.product.title }}</h6>
       <p>{{ item.product.price | money_with_currency }}</p>
@@ -17,3 +17,14 @@
     </div>
   </div>
 {% endfor %}
+
+{% schema %}
+  {
+    "name": "Featured Collection",
+    "presets": [
+      {
+        "name": "Cart Api PlayGround"
+      }
+    ]
+  }
+{% endschema %}
