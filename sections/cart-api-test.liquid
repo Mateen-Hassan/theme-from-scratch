@@ -1,0 +1,19 @@
+{% for item in cart.items %}
+  <div>
+    <div class="cart-line-item">
+      <a href="{{item.url}}">
+        {{ item.image | image_url: width: width 100 | image_tag }}
+      </a>
+      <h6>{{ item.product.title }}</h6>
+      <p>{{ item.product.price | money_with_currency }}</p>
+      {% for property in items.properties %}
+        <p>{{ property.first }}: {{ property.last }}</p>
+      {% endfor %}
+    </div>
+    <div class="actions">
+      <div class="quantity-selector">
+        <a href="{{routes.cart_change_url}}"></a>
+      </div>
+    </div>
+  </div>
+{% endfor %}

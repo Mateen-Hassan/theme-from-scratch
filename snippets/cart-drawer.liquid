@@ -1,10 +1,10 @@
 {% comment %} 
-        Shopify Cart Drawer - Ajax-powered sliding cart 
-        Add this to your theme (snippets/cart-drawer.liquid) 
-        Usage:
-        1. Include this snippet in your theme.liquid before </body>
-        2. Add a trigger button with class "cart-drawer-trigger" or data-cart-drawer-toggle
-        3. Works with any "add to cart" form that has class "product-form"
+              Shopify Cart Drawer - Ajax-powered sliding cart 
+              Add this to your theme (snippets/cart-drawer.liquid) 
+              Usage:
+              1. Include this snippet in your theme.liquid before </body>
+              2. Add a trigger button with class "cart-drawer-trigger" or data-cart-drawer-toggle
+              3. Works with any "add to cart" form that has class "product-form"
 {% endcomment %}
 
 <!-- Cart Drawer Overlay -->
@@ -51,6 +51,7 @@
       Continue Shopping
     </button>
   </div>
+  
 </div>
 
 <style>
@@ -510,6 +511,7 @@
                 ${variantText ? `<div class="cart-drawer-item-variant">${variantText}</div>` : ''}
                 <div class="cart-drawer-item-price">${this.formatMoney(item.price)}</div>
                 <div class="cart-drawer-item-quantity">
+                
                   <button class="cart-drawer-item-qty-btn" data-qty-decrease data-index="${i}" data-key="${item.key}">-</button>
                   <input type="number" class="cart-drawer-item-qty" value="${item.quantity}" min="1" data-qty-input data-index="${i}" data-key="${item.key}">
                   <button class="cart-drawer-item-qty-btn" data-qty-increase data-index="${i}" data-key="${item.key}">+</button>
@@ -727,7 +729,7 @@
   // This code runs whenever 'cart:updated' is dispatched
   console.log('Cart was updated!')
   ;})
-
+  
     // Expose for global use
     window.CartDrawer = {
       open: () => cartDrawer && cartDrawer.open(),
@@ -738,19 +740,19 @@
 </script>
 
 {% comment %} 
-        ============================================ 
-        TRIGGER BUTTON EXAMPLE (add anywhere in your theme): 
-        ============================================ 
-        <button class="cart-drawer-trigger" data-cart-drawer-toggle>
-        <i class="fas fa-shopping-cart"></i>
-        Cart (<span data-cart-count-display>{{ cart.item_count }}</span>) 
-        </button> 
-        ============================================ 
-        ADD TO CART FORM EXAMPLE: 
-        ============================================ 
-        <form class="product-form" action="/cart/add" method="post">
-        <input type="hidden" name="id" value="{{ product.variants.first.id }}">
-        <input type="number" name="quantity" value="1" min="1">
-        <button type="submit">Add to Cart</button> 
-        </form>
+              ============================================ 
+              TRIGGER BUTTON EXAMPLE (add anywhere in your theme): 
+              ============================================ 
+              <button class="cart-drawer-trigger" data-cart-drawer-toggle>
+              <i class="fas fa-shopping-cart"></i>
+              Cart (<span data-cart-count-display>{{ cart.item_count }}</span>) 
+              </button> 
+              ============================================ 
+              ADD TO CART FORM EXAMPLE: 
+              ============================================ 
+              <form class="product-form" action="/cart/add" method="post">
+              <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+              <input type="number" name="quantity" value="1" min="1">
+              <button type="submit">Add to Cart</button> 
+              </form>
 {% endcomment %}

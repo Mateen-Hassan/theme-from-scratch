@@ -1,5 +1,5 @@
 {% comment %} 
-                                                      Simple Featured Collection Section
+                                                                                      Simple Featured Collection Section
 {% endcomment %}
 
 <section class="featured-collection">
@@ -14,41 +14,6 @@
     {% assign collection = collections[section.settings.collection] %}
 
     <div class="featured-collection__grid">
-      {% for block in section.blocks %}
-        {%- case block.type -%}
-          {%- when "heading" -%}
-            <h1>{{ block.settings.heading }}</h1>
-        {% endcase %}
-        {% for block in section.blocks %}
-          {% if block.settings.selected_product != blank %}
-            {% assign product = all_products[block.settings.selected_product] %}
-
-              <form method="post" action="/cart/add">
-              <input
-                type="hidden"
-                name="id"
-                value="{{ product.selected_or_first_available_variant.id }}">
-              <input
-                type="hidden"
-                name="quantity"
-                value="1">
-
-              <!-- Add bundled product from block setting -->
-              {% if block.settings.bundle_product != blank %}
-                {% assign bundle_product = all_products[block.settings.bundle_product] %}
-                <input
-                  type="hidden"
-                  name="properties[_bundle_item]"
-                  value="{{ bundle_product.title }}">
-              {% endif %}
-
-              <button type="submit" class="button">
-                Add {{ product.title }} to Cart
-              </button>
-            </form>
-          {% endif %}
-        {% endfor %}
-      {% endfor %}
       {% for product in collection.products limit: section.settings.products_to_show %}
 
         <div class="featured-collection__card">
@@ -171,45 +136,6 @@
         "max": 12,
         "step": 1,
         "default": 4
-      }
-    ],
-    "blocks": [
-      {
-        "type": "heading",
-        "name": "Heading",
-        "settings": [
-          {
-            "type": "text",
-            "id": "heading",
-            "label": "Heading",
-            "default": "Hello, world!"
-          },
-          {
-            "type": "product",
-            "id": "product_1",
-            "label": "First product"
-          },
-          {
-            "type": "product",
-            "id": "product_2",
-            "label": "Second product"
-          },
-          {
-            "type": "product",
-            "id": "product_3",
-            "label": "Third product (optional)",
-            "info": "Leave unselected to show only 2 products"
-          }, {
-            "type": "range",
-            "id": "discount_percentage",
-            "label": "Bundle discount",
-            "min": 0,
-            "max": 50,
-            "step": 5,
-            "unit": "%",
-            "default": 10
-          }
-        ]
       }
     ],
     "presets": [
