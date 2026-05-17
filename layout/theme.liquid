@@ -9,8 +9,8 @@
     {{ content_for_header }}
   </head>
   <body>
+    {% section 'nav-bar' %}
     {% render 'cart-drawer' %}
-    {% section 'header-group' %}
     {{ content_for_layout }}
   </body>
 </html>

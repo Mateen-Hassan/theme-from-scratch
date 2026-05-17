@@ -1,8 +1,17 @@
 {
-    "name":"Header",
+    "name": "t:sections.header.name",
+    "type": "header",
     "sections": {
-
+      "nav-bar": {
+        "type": "nav-bar",
+        "settings": {
+          "color_scheme": "background-1",
+          "show_social": true
+        }
+      }
     },
-    "order": [],
-    "type": "header"
-}
+    "order": [
+      "nav-bar",
+    ]
+  }
+  

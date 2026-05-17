@@ -10,7 +10,7 @@
 {
   "sections": {
     "header_Wa7RAN": {
-      "type": "header",
+      "type": "nav-bar",
       "name": "Simple Header",
       "settings": {
         "sticky_header": true,

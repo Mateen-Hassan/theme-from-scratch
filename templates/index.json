@@ -10,7 +10,7 @@
 {
   "sections": {
     "header_Wa7RAN": {
-      "type": "header",
+      "type": "nav-bar",
       "disabled": true,
       "name": "Simple Header",
       "settings": {
