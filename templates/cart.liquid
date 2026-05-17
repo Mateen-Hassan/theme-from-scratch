@@ -1,7 +1,7 @@
 {% comment %} 
-          Shopify Cart Page Template (cart.liquid) 
-          Simple, clean, and responsive design. 
-          Compatible with Shopify Online Store 2.0
+              Shopify Cart Page Template (cart.liquid) 
+              Simple, clean, and responsive design. 
+              Compatible with Shopify Online Store 2.0
 {% endcomment %}
 
 {% if cart.item_count == 0 %}
@@ -35,7 +35,16 @@
       <h1 class="cart-title">Your cart
         <span class="cart-count">({{ cart.item_count }} {{ cart.item_count | pluralize: 'item', 'items' }})</span>
       </h1>
-
+      <form action="{{ routes.cart_url }}" method="post">
+        {% for item in cart.items %}
+          <input
+            type="hidden"
+            name="updates[{{ item.key }}]"
+            value="{{ item.quantity | plus: 1 }}">
+        {% endfor %}
+        <input type="hidden" name="return_to" value="{{ routes.cart_url }}">
+        <button type="submit" name="update">add 1 more item</button>
+      </form>
       <form
         action="/cart"
         method="post"

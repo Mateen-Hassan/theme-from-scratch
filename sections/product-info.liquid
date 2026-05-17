@@ -1,5 +1,5 @@
 {% comment %} 
-                                                                                                                      Simple Product Page Section
+                                                                                                                                Simple Product Page Section
 {% endcomment %}
 {{ 'splide.min.css' | asset_img_url | stylesheet_tag }}
 <section class="custom-product-page">
@@ -7,13 +7,13 @@
 
     <div class="product-layout">
       {% comment %} {% if product.featured_image %}
-                                                                                        <img
-                                                                                          id="main-product-image"
-                                                                                          src="{{ product.featured_image | image_url: width: 500 }}"
-                                                                                          alt="{{ product.title }}"
-                                                                                          width="500"
-                                                                                          height="500">
-                                                                  {% endif %} {% endcomment %}
+                                                                                                                                <img
+                                                                                                                                  id="main-product-image"
+                                                                                                                                  src="{{ product.featured_image | image_url: width: 500 }}"
+                                                                                                                                  alt="{{ product.title }}"
+                                                                                                                                  width="500"
+                                                                                                                                  height="500">
+                                                                                                {% endif %} {% endcomment %}
       <section class="splide" aria-label="Splide Basic HTML Example">
         <div class="splide__track">
           <ul class="splide__list">
@@ -32,18 +32,18 @@
       </section>
       <!-- Product Images -->
       {% comment %} <div class="product-images">
-                                                                                                                                                                                                                                                                                                                                                {% if product.featured_image %}
-                                                                                                                                                                                                                                                                                                                                                  <img
-                                                                                                                                                                                                                                                                                                                                                    id="main-product-image"
-                                                                                                                                                                                                                                                                                                                                                    src="{{ product.featured_image | image_url: width: 500 }}"
-                                                                                                                                                                                                                                                                                                                                                    alt="{{ product.title }}"
-                                                                                                                                                                                                                                                                                                                                                    width="500"
-                                                                                                                                                                                                                                                                                                                                                    height="500">
-                                                                                                                                                                                                                                                                                                                                                {% endif %}
-                                                                                  
-                                                                                                                                                                                                                                                                                                                                                <div class="product-thumbnails">
-                                                                                           
-                                                                                                                                                                                                                                                              </div> {% endcomment %}
+                                                                                                                                                                                                                                                                                                                                                                                        {% if product.featured_image %}
+                                                                                                                                                                                                                                                                                                                                                                                          <img
+                                                                                                                                                                                                                                                                                                                                                                                            id="main-product-image"
+                                                                                                                                                                                                                                                                                                                                                                                            src="{{ product.featured_image | image_url: width: 500 }}"
+                                                                                                                                                                                                                                                                                                                                                                                            alt="{{ product.title }}"
+                                                                                                                                                                                                                                                                                                                                                                                            width="500"
+                                                                                                                                                                                                                                                                                                                                                                                            height="500">
+                                                                                                                                                                                                                                                                                                                                                                                        {% endif %}
+                                                                                            
+                                                                                                                                                                                                                                                                                                                                                                                        <div class="product-thumbnails">
+                                                                                                     
+                                                                                                                                                                                                                                                                                            </div> {% endcomment %}
 
 
       <!-- Product Info -->
@@ -95,7 +95,6 @@
               value="1"
               min="1">
           </div>
-
           <!-- Variant ID -->
           <input
             type="hidden"

@@ -1,12 +1,42 @@
-{% for item in cart.items %}
-  <div class="cart-line-item">
-    <a href="{{item.url}}">
-      {{ item.image | image_url: width: width 100 | image_tag }}
-    </a>
-    <h6>{{ item.product.title }}</h6>
-    <p>{{ item.product.price | money_with_currency }}</p>
-    {% for property in items.properties %}
-      <p>{{ property.first }}: {{ property.last }}</p>
-    {% endfor %}
-  </div>
-{% endfor %}
+<div class="container">
+  {% for item in cart.items %}
+    <div class="cart-line-item">
+      {% comment %} <a href="{{item.url}}">
+                                                                                                                                                                                                                    {{ item.image | image_url: width: width 10 | image_tag }}
+                                                                                                                                                              </a> {% endcomment %}
+      <h6>{{ item.product.title }}</h6>
+      <p>{{ item.product.price | money_with_currency }}</p>
+      {% for property in items.properties %}
+        <p>{{ property.first }}: {{ property.last }}</p>
+      {% endfor %}
+      <a href="{{ routes.cart_change_url }}?quantity={{item.quantity |  minus: 1}}&line={{forloop.index}}">-</a>
+      <span>{{ item.quantity }}</span>
+      <a class="added" href="{{ routes.cart_change_url }}?quantity={{item.quantity |  plus: 1}}&line={{forloop.index}}">+</a>
+      <a href="{{item.url_to_remove}}">
+        Remove</a>
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+  // document.querySelectorAll('a').forEach(function(element) {
+  // element.addEventListener('click', function(event) {
+  //   event.preventDefault();
+  //   // Your custom logic here
+  // });
+  // });
+  
+  const button=document.querySelector('.added');
+  button.addEventListener('click',async ()=>{
+  fetch(`${window.Shopify.routes.root}?sections=render`)
+  .then((response)=>{
+    return response.json();
+  })
+  await delay(1000);
+   .then((data)=>{
+    console.log(data)
+    document.querySelector(".container").innerHTML=data["render"]
+   })
+   .catch(error => console.error('Error updating data:', error));
+  })
+</script>

@@ -1,0 +1,27 @@
+<form method="post" action="/cart/add">
+  <input
+    type="hidden"
+    name="id"
+    value="{{product.selected_or_first_available_variant.id}}">
+  <input
+    type="hidden"
+    name="quantity"
+    value="1">
+
+  <atc-button>
+    <button type="submit" class="button">Add to Cart</button>
+  </atc-button>
+</form>
+
+<script>
+  class MyAtcButton extends HTMLElement {
+    constructor() {
+      super();
+      console.log('atc-button initialized');
+    }
+  }
+  
+  if (!customElements.get("atc-button")) {
+    customElements.define("atc-button", MyAtcButton);
+  }
+</script>

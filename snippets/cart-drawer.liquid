@@ -1,10 +1,10 @@
 {% comment %} 
-              Shopify Cart Drawer - Ajax-powered sliding cart 
-              Add this to your theme (snippets/cart-drawer.liquid) 
-              Usage:
-              1. Include this snippet in your theme.liquid before </body>
-              2. Add a trigger button with class "cart-drawer-trigger" or data-cart-drawer-toggle
-              3. Works with any "add to cart" form that has class "product-form"
+                                                      Shopify Cart Drawer - Ajax-powered sliding cart 
+                                                      Add this to your theme (snippets/cart-drawer.liquid) 
+                                                      Usage:
+                                                      1. Include this snippet in your theme.liquid before </body>
+                                                      2. Add a trigger button with class "cart-drawer-trigger" or data-cart-drawer-toggle
+                                                      3. Works with any "add to cart" form that has class "product-form"
 {% endcomment %}
 
 <!-- Cart Drawer Overlay -->
@@ -18,6 +18,19 @@
       Your Cart
       <span class="cart-drawer-count" data-cart-count>0</span>
     </h3>
+    <form action="{{ routes.cart_url }}" method="post">
+      {% for item in cart.items %}
+        <input
+          type="hidden"
+          name="updates[{{ item.key }}]"
+          value="{{ item.quantity | plus: 1 }}">
+      {% endfor %}
+      <input
+        type="hidden"
+        name="return_to"
+        value="{{ routes.cart_url }}">
+      <button type="submit" name="update">add 1 more item</button>
+    </form>
     <button class="cart-drawer-close" data-cart-drawer-close>
       <i class="fas fa-times"></i>
     </button>
@@ -51,7 +64,7 @@
       Continue Shopping
     </button>
   </div>
-  
+
 </div>
 
 <style>
@@ -740,19 +753,19 @@
 </script>
 
 {% comment %} 
-              ============================================ 
-              TRIGGER BUTTON EXAMPLE (add anywhere in your theme): 
-              ============================================ 
-              <button class="cart-drawer-trigger" data-cart-drawer-toggle>
-              <i class="fas fa-shopping-cart"></i>
-              Cart (<span data-cart-count-display>{{ cart.item_count }}</span>) 
-              </button> 
-              ============================================ 
-              ADD TO CART FORM EXAMPLE: 
-              ============================================ 
-              <form class="product-form" action="/cart/add" method="post">
-              <input type="hidden" name="id" value="{{ product.variants.first.id }}">
-              <input type="number" name="quantity" value="1" min="1">
-              <button type="submit">Add to Cart</button> 
-              </form>
+                                                      ============================================ 
+                                                      TRIGGER BUTTON EXAMPLE (add anywhere in your theme): 
+                                                      ============================================ 
+                                                      <button class="cart-drawer-trigger" data-cart-drawer-toggle>
+                                                      <i class="fas fa-shopping-cart"></i>
+                                                      Cart (<span data-cart-count-display>{{ cart.item_count }}</span>) 
+                                                      </button> 
+                                                      ============================================ 
+                                                      ADD TO CART FORM EXAMPLE: 
+                                                      ============================================ 
+                                                      <form class="product-form" action="/cart/add" method="post">
+                                                      <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+                                                      <input type="number" name="quantity" value="1" min="1">
+                                                      <button type="submit">Add to Cart</button> 
+                                                      </form>
 {% endcomment %}
