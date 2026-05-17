@@ -1,3 +1,41 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
-  "current": {}
+  "current": {
+    "sections": {
+      "nav-bar": {
+        "type": "nav-bar",
+        "blocks": {
+          "menu_item_g8CWC7": {
+            "type": "menu_item",
+            "settings": {
+              "title": "Shop",
+              "menu": "customer-account-main-menu"
+            }
+          }
+        },
+        "block_order": [
+          "menu_item_g8CWC7"
+        ],
+        "settings": {
+          "sticky_header": true,
+          "header_bg": "#ffffff",
+          "main_menu": "main-menu",
+          "mega_menu_trigger": "Catalog",
+          "mega_menu_image_alt": "",
+          "mega_menu_image_link": "",
+          "mega_menu_image_heading": "",
+          "mega_menu_image_text": ""
+        }
+      }
+    },
+    "content_for_index": []
+  }
 }

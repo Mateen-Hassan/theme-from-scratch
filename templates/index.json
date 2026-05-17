@@ -9,16 +9,6 @@
  */
 {
   "sections": {
-    "header_Wa7RAN": {
-      "type": "nav-bar",
-      "disabled": true,
-      "name": "Simple Header",
-      "settings": {
-        "sticky_header": true,
-        "header_bg": "#ffffff",
-        "main_menu": "main-menu"
-      }
-    },
     "heading": {
       "type": "headings",
       "settings": {
@@ -36,7 +26,6 @@
     }
   },
   "order": [
-    "header_Wa7RAN",
     "heading",
     "featured_collection_B9BdaN"
   ]
