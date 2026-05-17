@@ -1,5 +1,5 @@
 {% comment %} 
-        Simple Shopify Header with Dynamic Menu Support
+                      Simple Shopify Header with Dynamic Menu Support
 {% endcomment %}
 
 <header class="site-header" data-site-header>
@@ -32,10 +32,26 @@
     <nav class="header-nav" data-header-nav>
       <ul class="nav-list">
         {% for link in linklists[section.settings.main_menu].links %}
-          <li class="nav-item">
-            <a href="{{ link.url }}" class="nav-link {% if link.title contains 'Sale' %}sale-link{% endif %}">
+          {% assign is_catalog = false %}
+          {% if link.title == section.settings.mega_menu_trigger %}
+            {% assign is_catalog = true %}
+          {% endif %}
+          <li class="nav-item{% if is_catalog %} nav-item--mega{% endif %}">
+            <a
+              href="{{ link.url }}"
+              class="nav-link {% if link.title contains 'Sale' %}sale-link{% endif %}{% if is_catalog %} nav-link--mega-trigger{% endif %}"
+              {% if is_catalog %}
+              aria-haspopup="true"
+              aria-expanded="false"
+              {% endif %}>
               {{ link.title }}
+              {% if is_catalog %}
+                <i class="fas fa-chevron-down nav-link__chevron" aria-hidden="true"></i>
+              {% endif %}
             </a>
+            {% if is_catalog %}
+              {% render 'mega-menu', section: section %}
+            {% endif %}
           </li>
         {% endfor %}
       </ul>
@@ -88,10 +104,28 @@
     <ul class="mobile-nav-list">
 
       {% for link in linklists[section.settings.main_menu].links %}
-        <li class="mobile-nav-item">
-          <a href="{{ link.url }}" class="mobile-nav-link {% if link.title contains 'Sale' %}sale-link{% endif %}">
-            {{ link.title }}
-          </a>
+        {% assign is_catalog_mobile = false %}
+        {% if link.title == section.settings.mega_menu_trigger %}
+          {% assign is_catalog_mobile = true %}
+        {% endif %}
+        <li class="mobile-nav-item{% if is_catalog_mobile %} mobile-nav-item--mega{% endif %}">
+          {% if is_catalog_mobile %}
+            <button
+              type="button"
+              class="mobile-nav-link mobile-nav-mega-toggle"
+              data-mobile-mega-toggle
+              aria-expanded="false">
+              {{ link.title }}
+              <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <div class="mobile-mega-menu" data-mobile-mega-menu hidden>
+              {% render 'mega-menu', section: section %}
+            </div>
+          {% else %}
+            <a href="{{ link.url }}" class="mobile-nav-link {% if link.title contains 'Sale' %}sale-link{% endif %}">
+              {{ link.title }}
+            </a>
+          {% endif %}
         </li>
       {% endfor %}
 
@@ -149,6 +183,8 @@
     position: sticky;
     top: 0;
     z-index: 100;
+    /* Anchor full-width mega menu panel */
+    isolation: isolate;
     background: {{ section.settings.header_bg }};
     border-bottom: 1px solid #e5e5e5;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
@@ -214,6 +250,175 @@
 
   .sale-link {
     color: #e74c3c;
+  }
+
+  .nav-item--mega {
+    position: static;
+  }
+
+  .nav-link--mega-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .nav-link__chevron {
+    font-size: 0.65rem;
+    transition: transform 0.2s ease;
+  }
+
+  .nav-item--mega.is-open .nav-link__chevron {
+    transform: rotate(180deg);
+  }
+
+  .mega-menu {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    background: #fff;
+    border-top: 1px solid #eee;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
+    pointer-events: none;
+    z-index: 90;
+  }
+
+  .nav-item--mega.is-open .mega-menu,
+  .nav-item--mega:focus-within .mega-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .mega-menu__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    display: flex;
+    gap: 2.5rem;
+    align-items: flex-start;
+  }
+
+  .mega-menu__columns {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 2rem;
+  }
+
+  .mega-menu__column-title {
+    margin: 0 0 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #111;
+  }
+
+  .mega-menu__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .mega-menu__links li + li {
+    margin-top: 0.5rem;
+  }
+
+  .mega-menu__link {
+    text-decoration: none;
+    color: #555;
+    font-size: 0.9375rem;
+    transition: color 0.2s;
+  }
+
+  .mega-menu__link:hover {
+    color: #000;
+  }
+
+  .mega-menu__promo {
+    flex-shrink: 0;
+    width: min(240px, 28vw);
+  }
+
+  .mega-menu__promo-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .mega-menu__promo-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 6px;
+    object-fit: cover;
+    aspect-ratio: 4 / 5;
+  }
+
+  .mega-menu__promo-content {
+    margin-top: 0.75rem;
+  }
+
+  .mega-menu__promo-heading {
+    margin: 0 0 0.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #111;
+  }
+
+  .mega-menu__promo-text {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: #666;
+    line-height: 1.4;
+  }
+
+  .mobile-nav-mega-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: none;
+    border: none;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .mobile-nav-item--mega.is-open .mobile-nav-mega-toggle i {
+    transform: rotate(180deg);
+  }
+
+  .mobile-mega-menu {
+    background: #fafafa;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .mobile-mega-menu .mega-menu {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+    box-shadow: none;
+    border: none;
+  }
+
+  .mobile-mega-menu .mega-menu__inner {
+    flex-direction: column;
+    padding: 1rem 1.5rem 1.25rem;
+    gap: 1.5rem;
+  }
+
+  .mobile-mega-menu .mega-menu__promo {
+    width: 100%;
+    max-width: 280px;
   }
 
   .header-actions {
@@ -449,7 +654,55 @@
       if (e.key === 'Escape') {
         closeMobileMenu();
         closeSearch();
+        closeMegaMenus();
       }
+    });
+
+    const megaNavItems = document.querySelectorAll('.nav-item--mega');
+
+    function closeMegaMenus() {
+      megaNavItems.forEach(item => {
+        item.classList.remove('is-open');
+        const trigger = item.querySelector('.nav-link--mega-trigger');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    megaNavItems.forEach(item => {
+      const trigger = item.querySelector('.nav-link--mega-trigger');
+
+      item.addEventListener('mouseenter', () => {
+        closeMegaMenus();
+        item.classList.add('is-open');
+        if (trigger) trigger.setAttribute('aria-expanded', 'true');
+      });
+
+      item.addEventListener('mouseleave', () => {
+        item.classList.remove('is-open');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      });
+
+      if (trigger) {
+        trigger.addEventListener('focus', () => {
+          closeMegaMenus();
+          item.classList.add('is-open');
+          trigger.setAttribute('aria-expanded', 'true');
+        });
+      }
+    });
+
+    document.querySelectorAll('[data-mobile-mega-toggle]').forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        const item = toggle.closest('.mobile-nav-item--mega');
+        const panel = item?.querySelector('[data-mobile-mega-menu]');
+        const isOpen = item?.classList.toggle('is-open');
+
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+        if (panel) {
+          panel.hidden = !isOpen;
+        }
+      });
     });
   
   })();
@@ -477,11 +730,73 @@
         "id": "main_menu",
         "label": "Navigation Menu",
         "default": "main-menu"
+      }, {
+        "type": "header",
+        "content": "Catalog mega menu"
+      }, {
+        "type": "text",
+        "id": "mega_menu_trigger",
+        "label": "Mega menu nav item title",
+        "default": "Catalog",
+        "info": "Must match the title of a link in the navigation menu above."
+      }, {
+        "type": "image_picker",
+        "id": "mega_menu_image",
+        "label": "Promo image (right side)"
+      }, {
+        "type": "text",
+        "id": "mega_menu_image_alt",
+        "label": "Promo image alt text"
+      }, {
+        "type": "url",
+        "id": "mega_menu_image_link",
+        "label": "Promo image link"
+      }, {
+        "type": "text",
+        "id": "mega_menu_image_heading",
+        "label": "Promo heading"
+      }, {
+        "type": "text",
+        "id": "mega_menu_image_text",
+        "label": "Promo text"
       }
     ],
+    "blocks": [
+      {
+        "type": "menu_item",
+        "name": "Link column",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Column heading",
+            "default": "Shop"
+          }, {
+            "type": "link_list",
+            "id": "menu",
+            "label": "Link list"
+          }
+        ]
+      }
+    ],
+    "max_blocks": 6,
     "presets": [
       {
-        "name": "Simple Header"
+        "name": "Simple Header",
+        "blocks": [
+          {
+            "type": "menu_item",
+            "settings": {
+              "title": "Categories"
+            }
+          },
+          {
+            "type": "menu_item",
+            "settings": {
+              "title": "Collections"
+            }
+          }
+        ]
       }
     ]
   }

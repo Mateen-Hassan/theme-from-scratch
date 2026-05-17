@@ -1,0 +1,90 @@
+{%- comment -%} 
+  Catalog mega menu. Pass section from nav-bar. 
+  Columns: section blocks (menu_item). Promo: section.settings mega_menu_*.
+{%- endcomment -%}
+
+{%- liquid
+  assign has_columns = false
+  for block in section.blocks
+    if block.type == 'menu_item'
+      assign has_columns = true
+      break
+    endif
+  endfor
+  assign has_promo = section.settings.mega_menu_image
+-%}
+
+{%- if has_columns or has_promo -%}
+  <div
+    class="mega-menu"
+    data-mega-menu
+    role="region"
+    aria-label="Catalog menu">
+    <div class="mega-menu__inner">
+      {%- if has_columns -%}
+        <div class="mega-menu__columns">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'menu_item' -%}
+              <div class="mega-menu__column" {{ block.shopify_attributes }}>
+                {%- if block.settings.title != blank -%}
+                  <p class="mega-menu__column-title">{{ block.settings.title }}</p>
+                {%- endif -%}
+
+                {%- if block.settings.menu != blank and linklists[block.settings.menu].links.size > 0 -%}
+                  <ul class="mega-menu__links">
+                    {%- for menu_link in linklists[block.settings.menu].links -%}
+                      <li>
+                        <a href="{{ menu_link.url }}" class="mega-menu__link">
+                          {{ menu_link.title }}
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if has_promo -%}
+        {%- liquid
+          assign promo_alt = section.settings.mega_menu_image_alt
+          if promo_alt == blank
+            assign promo_alt = section.settings.mega_menu_image_heading
+          endif
+        -%}
+        <div class="mega-menu__promo">
+          {%- if section.settings.mega_menu_image_link != blank -%}
+            <a href="{{ section.settings.mega_menu_image_link }}" class="mega-menu__promo-link">
+          {%- endif -%}
+
+          {{ section.settings.mega_menu_image
+ | image_url: width: 480
+ | image_tag:
+ class: 'mega-menu__promo-image',
+ loading: 'lazy',
+ widths: '240, 360, 480',
+ sizes: '(min-width: 990px) 240px, 200px',
+ alt: promo_alt
+          }}
+
+          {%- if section.settings.mega_menu_image_heading != blank or section.settings.mega_menu_image_text != blank -%}
+            <div class="mega-menu__promo-content">
+              {%- if section.settings.mega_menu_image_heading != blank -%}
+                <p class="mega-menu__promo-heading">{{ section.settings.mega_menu_image_heading }}</p>
+              {%- endif -%}
+              {%- if section.settings.mega_menu_image_text != blank -%}
+                <p class="mega-menu__promo-text">{{ section.settings.mega_menu_image_text }}</p>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          {%- if section.settings.mega_menu_image_link != blank -%}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
