@@ -12,7 +12,7 @@
     <button type="submit" class="button">Add to Cart</button>
   </atc-button>
 </form>
-
+{% comment %} 
 <script>
   class MyAtcButton extends HTMLElement {
     constructor() {
@@ -24,4 +24,4 @@
   if (!customElements.get("atc-button")) {
     customElements.define("atc-button", MyAtcButton);
   }
-</script>
+</script> {% endcomment %}
