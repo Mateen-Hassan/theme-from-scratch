@@ -9,31 +9,7 @@
     value="1">
 
   <atc-button>
-    <button type="submit" class="button">Add to Cart</button>
+    <button type="submit" class="button" onclick="popop()">Add to Cart</button>
   </atc-button>
 </form>
-<div class="popup">
-<p>to kesy hai ap log</p>
-</div>
-{% style %}
-  .popup{
-    display: block;
-    position: fixed;
-    height:90%;
-    width: 90%;
-    background-color: black;
 
-  }
-{% endstyle %}
-<script>
-  class MyAtcButton extends HTMLElement {
-    constructor() {
-      super();
-      console.log('atc-button initialized');
-    }
-  }
-  
-  if (!customElements.get("atc-button")) {
-    customElements.define("atc-button", MyAtcButton);
-  }
-</script>
