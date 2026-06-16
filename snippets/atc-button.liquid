@@ -12,7 +12,19 @@
     <button type="submit" class="button">Add to Cart</button>
   </atc-button>
 </form>
-{% comment %} 
+<div class="popup">
+
+</div>
+{% style %}
+  .popup{
+    display: block;
+    position: fixed;
+    height:90%;
+    width: 90%;
+    background-color: black;
+
+  }
+{% endstyle %}
 <script>
   class MyAtcButton extends HTMLElement {
     constructor() {
@@ -24,4 +36,4 @@
   if (!customElements.get("atc-button")) {
     customElements.define("atc-button", MyAtcButton);
   }
-</script> {% endcomment %}
+</script>
