@@ -44,7 +44,7 @@
 </div>
 {% style %}
   .popup{
-    display: block;
+    display: none;
     position: fixed;
     height:90%;
     width: 90%;
@@ -108,7 +108,24 @@
     }
   }
 </style>
+<script>
+  const button=document.querySelector(".button")
+  const notification= document.querySelector(".popup");
 
+  function popop(){
+  notification.display=block;
+  }
+  class MyAtcButton extends HTMLElement {
+    constructor() {
+      super();
+      console.log('atc-button initialized');
+    }
+  }
+  
+  if (!customElements.get("atc-button")) {
+    customElements.define("atc-button", MyAtcButton);
+  }
+</script>
 {% schema %}
   {
     "name": "Featured Collection",
