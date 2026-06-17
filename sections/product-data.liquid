@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="product-image">
+    <img src="{{ product.featured_image | image_url: width: 500 }}" alt="{{product.title}}">
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Custom Product Page",
+    "settings": [],
+    "presets": [
+      {
+        "name": "Product Image"
+      }
+    ]
+  }
+{% endschema %}

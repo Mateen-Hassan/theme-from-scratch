@@ -9,11 +9,18 @@
     value="1">
 
   <atc-button>
-    <button type="submit" class="button">Add to Cart</button>
+    <button type="submit" class="button" onclick='popup()' >Add to Cart</button>
   </atc-button>
 </form>
 
 <script>
+const button1= document.querySelector(".button");
+function popup(){
+  button1.addEventListener("click", alert("This button got pressed "))
+
+}
+
+
   class MyAtcButton extends HTMLElement {
     constructor() {
       super();

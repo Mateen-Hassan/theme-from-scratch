@@ -1,5 +1,5 @@
 {% comment %} 
-                      Simple Shopify Header with Dynamic Menu Support
+                              Simple Shopify Header with Dynamic Menu Support
 {% endcomment %}
 
 <header class="site-header" data-site-header>
@@ -37,20 +37,22 @@
             {% assign is_catalog = true %}
           {% endif %}
           <li class="nav-item{% if is_catalog %} nav-item--mega{% endif %}">
-            <a
-              href="{{ link.url }}"
-              class="nav-link {% if link.title contains 'Sale' %}sale-link{% endif %}{% if is_catalog %} nav-link--mega-trigger{% endif %}"
-              {% if is_catalog %}
-              aria-haspopup="true"
-              aria-expanded="false"
-              {% endif %}>
-              {{ link.title }}
-              {% if is_catalog %}
-                <i class="fas fa-chevron-down nav-link__chevron" aria-hidden="true"></i>
-              {% endif %}
-            </a>
             {% if is_catalog %}
-              {% render 'mega-menu', section: section %}
+              <button
+                type="button"
+                class="nav-link nav-link--mega-trigger"
+                data-mega-trigger
+                aria-haspopup="true"
+                aria-expanded="false">
+                {{ link.title }}
+                <i class="fas fa-chevron-down nav-link__chevron" aria-hidden="true"></i>
+              </button>
+              {% render 'mega-menu'
+                , section: section %}
+            {% else %}
+              <a href="{{ link.url }}" class="nav-link {% if link.title contains 'Sale' %}sale-link{% endif %}">
+                {{ link.title }}
+              </a>
             {% endif %}
           </li>
         {% endfor %}
@@ -118,8 +120,12 @@
               {{ link.title }}
               <i class="fas fa-chevron-down" aria-hidden="true"></i>
             </button>
-            <div class="mobile-mega-menu" data-mobile-mega-menu hidden>
-              {% render 'mega-menu', section: section %}
+            <div
+              class="mobile-mega-menu"
+              data-mobile-mega-menu
+              hidden>
+              {% render 'mega-menu'
+                , section: section %}
             </div>
           {% else %}
             <a href="{{ link.url }}" class="mobile-nav-link {% if link.title contains 'Sale' %}sale-link{% endif %}">
@@ -260,6 +266,11 @@
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
   }
 
   .nav-link__chevron {
@@ -272,6 +283,7 @@
   }
 
   .mega-menu {
+    display: none;
     position: absolute;
     left: 0;
     right: 0;
@@ -279,20 +291,23 @@
     background: #fff;
     border-top: 1px solid #eee;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(8px);
-    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
-    pointer-events: none;
     z-index: 90;
   }
 
+  .mega-menu::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    height: 12px;
+  }
+
+  .nav-item--mega.is-hover .mega-menu,
+  .nav-item--mega.is-clicked .mega-menu,
   .nav-item--mega.is-open .mega-menu,
   .nav-item--mega:focus-within .mega-menu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: auto;
+    display: block;
   }
 
   .mega-menu__inner {
@@ -401,13 +416,14 @@
   }
 
   .mobile-mega-menu .mega-menu {
+    display: none;
     position: static;
-    opacity: 1;
-    visibility: visible;
-    transform: none;
-    pointer-events: auto;
     box-shadow: none;
     border: none;
+  }
+
+  .mobile-mega-menu:not([hidden]) .mega-menu {
+    display: block;
   }
 
   .mobile-mega-menu .mega-menu__inner {
@@ -657,48 +673,97 @@
         closeMegaMenus();
       }
     });
-
+  
     const megaNavItems = document.querySelectorAll('.nav-item--mega');
-
+  
+    function isMegaOpen(item) {
+      return item.classList.contains('is-hover')
+        || item.classList.contains('is-clicked')
+        || item.matches(':focus-within');
+    }
+  
+    function syncMegaState(item) {
+      const trigger = item.querySelector('[data-mega-trigger]');
+      const open = isMegaOpen(item);
+  
+      item.classList.toggle('is-open', open);
+  
+      if (trigger) {
+        trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+    }
+  
     function closeMegaMenus() {
       megaNavItems.forEach(item => {
-        item.classList.remove('is-open');
-        const trigger = item.querySelector('.nav-link--mega-trigger');
-        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        item.classList.remove('is-hover', 'is-clicked', 'is-open');
+        syncMegaState(item);
       });
     }
-
+  
+    function closeOtherMegaClicks(activeItem) {
+      megaNavItems.forEach(item => {
+        if (item !== activeItem) {
+          item.classList.remove('is-clicked');
+          syncMegaState(item);
+        }
+      });
+    }
+  
     megaNavItems.forEach(item => {
-      const trigger = item.querySelector('.nav-link--mega-trigger');
-
+      const trigger = item.querySelector('[data-mega-trigger]');
+  
       item.addEventListener('mouseenter', () => {
-        closeMegaMenus();
-        item.classList.add('is-open');
-        if (trigger) trigger.setAttribute('aria-expanded', 'true');
+        item.classList.add('is-hover');
+        syncMegaState(item);
       });
-
+  
       item.addEventListener('mouseleave', () => {
-        item.classList.remove('is-open');
-        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        item.classList.remove('is-hover');
+        syncMegaState(item);
       });
-
+  
       if (trigger) {
-        trigger.addEventListener('focus', () => {
-          closeMegaMenus();
-          item.classList.add('is-open');
-          trigger.setAttribute('aria-expanded', 'true');
+        trigger.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+  
+          const willOpen = !item.classList.contains('is-clicked');
+  
+          closeOtherMegaClicks(item);
+          item.classList.toggle('is-clicked', willOpen);
+          syncMegaState(item);
         });
       }
+  
+      item.addEventListener('focusin', () => syncMegaState(item));
+  
+      item.addEventListener('focusout', (e) => {
+        if (!item.contains(e.relatedTarget)) {
+          item.classList.remove('is-clicked');
+          syncMegaState(item);
+        }
+      });
     });
-
+  
+    document.addEventListener('click', (e) => {
+      const insideMega = e.target.closest('.nav-item--mega');
+  
+      megaNavItems.forEach(item => {
+        if (item !== insideMega) {
+          item.classList.remove('is-clicked');
+          syncMegaState(item);
+        }
+      });
+    });
+  
     document.querySelectorAll('[data-mobile-mega-toggle]').forEach(toggle => {
       toggle.addEventListener('click', () => {
         const item = toggle.closest('.mobile-nav-item--mega');
         const panel = item?.querySelector('[data-mobile-mega-menu]');
         const isOpen = item?.classList.toggle('is-open');
-
+  
         toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-
+  
         if (panel) {
           panel.hidden = !isOpen;
         }
@@ -715,17 +780,20 @@
       {
         "type": "header",
         "content": "Header Settings"
-      }, {
+      },
+      {
         "type": "checkbox",
         "id": "sticky_header",
         "label": "Enable Sticky Header",
         "default": true
-      }, {
+      },
+      {
         "type": "color",
         "id": "header_bg",
         "label": "Header Background",
         "default": "#ffffff"
-      }, {
+      },
+      {
         "type": "link_list",
         "id": "main_menu",
         "label": "Navigation Menu",
@@ -789,8 +857,7 @@
             "settings": {
               "title": "Categories"
             }
-          },
-          {
+          }, {
             "type": "menu_item",
             "settings": {
               "title": "Collections"
