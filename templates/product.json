@@ -14,12 +14,6 @@
       "name": "Product Image",
       "settings": {}
     },
-    "product_info_mP4jUy": {
-      "type": "product-info",
-      "disabled": true,
-      "name": "Custom Product Page",
-      "settings": {}
-    },
     "featured_collection_B9BdaN": {
       "type": "featured-collection",
       "name": "Featured Collection",
@@ -32,7 +26,6 @@
   },
   "order": [
     "product_data_gGVRfn",
-    "product_info_mP4jUy",
     "featured_collection_B9BdaN"
   ]
 }
