@@ -39,6 +39,19 @@
             , product: product %}
         </div>
       {% endfor %}
+      <div class="popup">
+<p>to kesy hai ap log</p>
+</div>
+{% style %}
+  .popup{
+    display: none;
+    position: fixed;
+    height:90%;
+    width: 90%;
+    background-color: black;
+
+  }
+{% endstyle %}
     </div>
 
   </div>
@@ -95,7 +108,27 @@
     }
   }
 </style>
-
+<script>
+  const button1=document.querySelector(".button")
+  const notification= document.querySelector(".popup");
+if(button1){
+console.log("catch")
+}
+  function popop(notification){
+  notification.display=block;
+  console.log("CSS updated")
+  }
+  class MyAtcButton extends HTMLElement {
+    constructor() {
+      super();
+      console.log('atc-button initialized');
+    }
+  }
+  
+  if (!customElements.get("atc-button")) {
+    customElements.define("atc-button", MyAtcButton);
+  }
+</script>
 {% schema %}
   {
     "name": "Featured Collection",
